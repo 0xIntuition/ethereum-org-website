@@ -27,7 +27,9 @@ import { isMobile } from "../utils/isMobile"
 
 import type { Context } from "../types"
 
-import client from "../apollo"
+import apolloClient from "../apollo"
+import { ConnectKitProvider, getDefaultClient } from "connectkit"
+import { createClient, WagmiConfig } from "wagmi"
 
 export interface IProps {
   children?: React.ReactNode
@@ -44,6 +46,15 @@ export interface IProps {
   path: string
   pageContext: Context
 }
+
+const alchemyId = process.env.ALCHEMY_ID
+
+const client = createClient(
+  getDefaultClient({
+    appName: "Your App Name",
+    alchemyId,
+  })
+)
 
 const Layout: React.FC<IProps> = ({
   data,
@@ -104,60 +115,64 @@ const Layout: React.FC<IProps> = ({
     !isTranslationBannerIgnored
 
   return (
-    <ApolloProvider client={client}>
+    <ApolloProvider client={apolloClient}>
       <ThemeProvider theme={theme}>
-        <ZenModeContext.Provider value={{ isZenMode, handleZenModeChange }}>
-          <SkipLink hrefId="#main-content" />
-          <TranslationBanner
-            shouldShow={shouldShowTranslationBanner}
-            isPageContentEnglish={isPageContentEnglish}
-            isPageRightToLeft={isPageRightToLeft}
-            originalPagePath={pageContext.i18n.originalPath || ""}
-          />
-          <TranslationBannerLegal
-            shouldShow={isLegal}
-            isPageRightToLeft={isPageRightToLeft}
-            originalPagePath={pageContext.i18n.originalPath || ""}
-          />
+        <WagmiConfig client={client}>
+          <ConnectKitProvider>
+            <ZenModeContext.Provider value={{ isZenMode, handleZenModeChange }}>
+              <SkipLink hrefId="#main-content" />
+              <TranslationBanner
+                shouldShow={shouldShowTranslationBanner}
+                isPageContentEnglish={isPageContentEnglish}
+                isPageRightToLeft={isPageRightToLeft}
+                originalPagePath={pageContext.i18n.originalPath || ""}
+              />
+              <TranslationBannerLegal
+                shouldShow={isLegal}
+                isPageRightToLeft={isPageRightToLeft}
+                originalPagePath={pageContext.i18n.originalPath || ""}
+              />
 
-          <Flex
-            position="relative"
-            margin="0px auto"
-            minHeight="100vh"
-            flexFlow="column"
-            maxW={{
-              lg: lightTheme.variables.maxPageWidth,
-            }}
-          >
-            <ZenMode>
-              <Nav path={path} />
-              {shouldShowSideNav && <SideNavMobile path={path} />}
-            </ZenMode>
-            <SkipLinkAnchor id="main-content" />
-            <Flex flexDirection={{ base: "column", lg: "row" }}>
-              {shouldShowSideNav && (
+              <Flex
+                position="relative"
+                margin="0px auto"
+                minHeight="100vh"
+                flexFlow="column"
+                maxW={{
+                  lg: lightTheme.variables.maxPageWidth,
+                }}
+              >
                 <ZenMode>
-                  <SideNav path={path} />
+                  <Nav path={path} />
+                  {shouldShowSideNav && <SideNavMobile path={path} />}
                 </ZenMode>
-              )}
-              <Flex flexDirection="column" width="100%">
-                <Flex
-                  justifyContent="space-around"
-                  alignItems="flex-start"
-                  overflow="visible"
-                  width="100%"
-                  flexGrow="1"
-                >
-                  {children}
+                <SkipLinkAnchor id="main-content" />
+                <Flex flexDirection={{ base: "column", lg: "row" }}>
+                  {shouldShowSideNav && (
+                    <ZenMode>
+                      <SideNav path={path} />
+                    </ZenMode>
+                  )}
+                  <Flex flexDirection="column" width="100%">
+                    <Flex
+                      justifyContent="space-around"
+                      alignItems="flex-start"
+                      overflow="visible"
+                      width="100%"
+                      flexGrow="1"
+                    >
+                      {children}
+                    </Flex>
+                  </Flex>
                 </Flex>
+                <ZenMode>
+                  <Footer />
+                </ZenMode>
+                <FeedbackWidget location={path} />
               </Flex>
-            </Flex>
-            <ZenMode>
-              <Footer />
-            </ZenMode>
-            <FeedbackWidget location={path} />
-          </Flex>
-        </ZenModeContext.Provider>
+            </ZenModeContext.Provider>
+          </ConnectKitProvider>
+        </WagmiConfig>
       </ThemeProvider>
     </ApolloProvider>
   )

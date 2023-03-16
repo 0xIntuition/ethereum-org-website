@@ -9,6 +9,7 @@ import Emoji from "./Emoji"
 import Translation from "./Translation"
 import { Lang } from "../utils/languages"
 import { TranslationKey } from "../utils/translations"
+import Tutorialattestations from "./TutorialAttestations"
 
 export interface IProps {
   tutorial: any
@@ -39,7 +40,7 @@ const TutorialMetadata: React.FC<IProps> = ({ tutorial }) => {
       borderBottomWidth={{ base: 0, lg: "1px" }}
       borderBottomColor="border"
     >
-      <Flex justifyContent="space-between" alignItems="center" w="full" mb={8}>
+      <Flex justifyContent="space-between" alignItems="center" w="full" mb={6}>
         <Flex flexWrap="wrap" w="full">
           <TutorialTags tags={frontmatter.tags} />
         </Flex>
@@ -47,10 +48,14 @@ const TutorialMetadata: React.FC<IProps> = ({ tutorial }) => {
           as={Badge}
           variant="secondary"
           alignSelf="flex-start"
-          mb={2}
           whiteSpace="nowrap"
         >
           <Translation id={getSkillTranslationId(frontmatter.skill)} />
+        </Flex>
+      </Flex>
+      <Flex justifyContent="space-between" alignItems="center" w="full" mb={6}>
+        <Flex flexWrap="wrap" w="full">
+          <Tutorialattestations attestations={frontmatter.tags} />
         </Flex>
       </Flex>
       <HStack

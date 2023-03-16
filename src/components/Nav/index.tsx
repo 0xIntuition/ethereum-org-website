@@ -21,6 +21,7 @@ import Translation from "../Translation"
 import { NavLink } from "../SharedStyledComponents"
 import { EthHomeIcon } from "../icons"
 import { IItem, ISections } from "./types"
+import { ConnectKitButton } from "connectkit"
 
 const NavContainer = styled.div`
   position: sticky;
@@ -403,12 +404,13 @@ const Nav: FC<IProps> = ({ path }) => {
                 _hover={{ color: "primary" }}
                 onClick={toggleColorMode}
               />
-              <ButtonLink to={`/languages/${fromPageParameter}`} variant="icon">
+              <ConnectKitButton mode={isDarkTheme ? "dark" : "light"} />
+              {/*               <ButtonLink to={`/languages/${fromPageParameter}`} variant="icon">
                 <Icon as={MdLanguage} fontSize="2xl" />
                 <Text as="span" pl={2}>
                   <Translation id="languages" />
                 </Text>
-              </ButtonLink>
+              </ButtonLink> */}
             </RightItems>
           </Flex>
           {/* Mobile */}

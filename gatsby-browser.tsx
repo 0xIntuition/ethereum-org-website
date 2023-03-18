@@ -15,3 +15,5 @@ import "@formatjs/intl-numberformat/locale-data/en"
 // Default languages included:
 // https://github.com/FormidableLabs/prism-react-renderer/blob/master/src/vendor/prism/includeLangs.js
 require("prismjs/components/prism-solidity")
+
+import "./src/styles/global.css"

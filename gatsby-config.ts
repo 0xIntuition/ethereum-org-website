@@ -35,6 +35,7 @@ const config: GatsbyConfig = {
     editContentUrl: `https://github.com/ethereum/ethereum-org-website/tree/dev/`,
   },
   plugins: [
+    `gatsby-plugin-postcss`,
     // Web app manifest
     {
       resolve: `gatsby-plugin-manifest`,
